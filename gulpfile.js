@@ -36,7 +36,7 @@
     gulp.task('sass', function() {
         return gulp.src(src.sass)
                    .pipe(sass())
-                   .pipe(gulp.dest('./public/css'));
+                   .pipe(gulp.dest('./public/build/'));
     });
 
     //register nodemon task
