@@ -1,0 +1,17 @@
+<div class="container">
+  <div class="jumbotron" id="wizardviews">
+    <h1>Step 1</h1> 
+    <p></p> 
+
+    <label for="basic-url">Whats the URL of your current website?</label>
+    <div class="input-group">
+      <span class="input-group-addon" id="basic-addon3" ng-hide="showLoadingSpinner">http://</span>
+      <input type="text" class="form-control"  ng-model="urltocheck" aria-describedby="basic-addon3" ng-hide="showLoadingSpinner">
+     <img src="../img/spiffygif_68x68.gif" ng-show="showLoadingSpinner"/>
+    </div>
+    <button class="btn btn-success" ng-click="dnsLook(urltocheck)">check DNS settings</button>
+  </div>
+  <p>This is some text.</p> 
+  <p>This is another text.</p> 
+  <button ng-click="setStep(2)">Next step</button>{{helloworld}}
+</div>

@@ -1,0 +1,13 @@
+<div class="container">
+  <div class="jumbotron"id="wizardviews">
+    <h1>Step 2</h1> 
+    <p>Your current NX records for your site </p> 
+  
+  {{nxrecords}}
+  <div ng-show="pointingtous"><h2>One of your A records is pointing to us.</h2></div>
+  <div ng-hide="pointingtous"><h2>None A records is pointing to us.</h2></div>
+  </div>
+  <p>This is some text.</p> 
+  <p>This is another text.</p> 
+  <button ng-click="setStep(3)">Next step</button>
+</div>
