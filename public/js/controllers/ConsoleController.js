@@ -1,11 +1,13 @@
 
-  function ConsoleController($scope,$http, $resource, $auth, $state) {
+  function ConsoleController($scope,$http, $resource, $auth, $state, $window) {
     console.log('Main controller Angular');
 
     $scope.pointingtous  = false;
     $scope.authenticated = false;
 
     $scope.login = {email: "",password: "", username: ""}
+
+    var socket = window.io();
 
 
     console.log("controller loaded");
@@ -30,6 +32,7 @@
       console.log(response);
       $scope.authenticated = true;
       $state.go('dashboard')
+      $scope.sendSocket($scope.login.username);
     })
    }
 
@@ -39,6 +42,7 @@
        console.log(response);
        $scope.authenticated = true;
        $state.go('dashboard')
+       $scope.sendSocket($scope.login.username);
     })
   }
 
@@ -91,10 +95,13 @@
     // upon success, do this
     function success(pos){
       // get longitude and latitude from the position object passed in
-      var lng = pos.coords.longitude;
-      var lat = pos.coords.latitude;
+
+      var geocoords = {lng: pos.coords.longitude, lat: pos.coords.latitude}
+
+      // send back their location to the server (via sockets)
+      $scope.sendSocket($scope.login.username, geocoords)
       // and presto, we have the device's location!
-      msg = 'You appear to be at longitude: ' + lng + ' and latitude: ' + lat  + '<img src="http://maps.googleapis.com/maps/api/staticmap?zoom=15&size=300x300&maptype=roadmap&markers=color:red%7Clabel:A%7C' + lat + ',' + lng+ '&sensor=false">';
+      msg = 'You appear to be at longitude: ' +  geocoords.lng + ' and latitude: ' +  geocoords.lat  + '<img src="http://maps.googleapis.com/maps/api/staticmap?zoom=15&size=300x300&maptype=roadmap&markers=color:red%7Clabel:A%7C' + geocoords.lat + ',' + geocoords.lng+ '&sensor=false">';
       outputResult(msg); // output message
       $('.pure-button').removeClass('pure-button-primary').addClass('pure-button-success'); // change button style
     }
@@ -130,13 +137,20 @@ $scope.getMyLocationbtn = function(){
 
 
   // Sockets sends location of user
-
+  $scope.sendSocket = function(username, geocoords){
+    socket.emit('message',{message: "this is a message", username: username, geocoords: geocoords });
+  }
   
 
 
 
   // sockets returns the last seen location of other users
   
+  socket.on('message', function(message){
+    console.log("socket - message: ", message)
+  });
+
+
     
   }
 export default ConsoleController;

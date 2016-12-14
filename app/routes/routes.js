@@ -3,6 +3,8 @@ var jwt = require('jsonwebtoken');
 var usersController = require('../controllers/users.server.controller');
 var authenticationController = require('../controllers/authentication');
 var secret = require('../../config/tokens').secret;
+//var server = require('../../server').server;
+//var io     = require('socket.io')(server);
 
 // custom JWT middleware
 function secureRoute(req, res, next) {
@@ -32,5 +34,13 @@ router.route('/users/:id')
 
 router.post('/auth/register', authenticationController.register);
 router.post('/auth/login', authenticationController.login);
+
+
+// socket controller needs making but for now
+
+
+
+
+
 
 module.exports = router;
