@@ -30,7 +30,13 @@ var	express 		= require('express'),
 
 
 
-	app.use(cors());
+	//app.use(cors());
+	app.use(function(req, res, next) {
+	  res.header("Access-Control-Allow-Origin", "*");
+	  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+	  next();
+	});
+
 	app.use(morgan('dev'));
 	app.use(bodyParser.urlencoded({ extended: true }));
 	app.use(bodyParser.json());
@@ -45,6 +51,7 @@ var	express 		= require('express'),
 
     io.on('connect', function(socket){
     	socketsController.connect(socket,io)
+    	io.emit("I emitted this from server.js")
     })
 
 	app.use('/app', express.static('./public'));

@@ -98,6 +98,21 @@
 
       var geocoords = {lng: pos.coords.longitude, lat: pos.coords.latitude}
 
+      // needs to calculate nearest city using GOOGLE. (in order to create rooms/ something like that with sockets)
+      //$http.post('', geocoords, config).then(successCallback, errorCallback);
+      $http({
+      method: 'POST',
+      url: '//maps.googleapis.com/maps/api/place/nearbysearch/json?location='+pos.coords.longitude+','+pos.coords.latitude+'&radius=500&types=bars&key=AIzaSyD_uTMhCR43ITM0CCXrbWDGR8UC68_QDnI'
+      }).then(function successCallback(response) {
+        // this callback will be called asynchronously
+        // when the response is available
+        console.log("google places api, data: ", response)
+      }, function errorCallback(response) {
+        // called asynchronously if an error occurs
+        // or server returns response with an error status.
+        console.log("google places api - FAILED, data: ", response)
+      });
+
       // send back their location to the server (via sockets)
       $scope.sendSocket($scope.login.username, geocoords)
       // and presto, we have the device's location!
