@@ -11,6 +11,7 @@ var	express 		= require('express'),
 	methodOverride	= require('method-override'),
 	jwt           = require('jsonwebtoken'),
 	router        = require('./app/routes/routes'),
+	socketsController = require('./app/controllers/socketsController'),
 	secret        = require('./config/tokens').secret,
 	io            = require('socket.io')(server);
 
@@ -43,17 +44,8 @@ var	express 		= require('express'),
     })*/
 
     io.on('connect', function(socket){
-    console.log("connect - new connection", socket.conn.id)
-
-    socket.on('message', function(message){
-      console.log("socket user: "+ message.username +" - sent a message, ", message.message, "geocoords: ", message.geocoords)
-        
-        if (message.hasOwnProperty("geocoords")){
-          console.log("geocoords from ("+message.username+") been recieved")
-        }
-
+    	socketsController.connect(socket,io)
     })
-   })
 
 	app.use('/app', express.static('./public'));
 
