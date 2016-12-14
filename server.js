@@ -41,7 +41,7 @@ var	express 		= require('express'),
 
 	//app.use(express.static('./public'));
 
-	app.use('/manager/api', router);
+	app.use('/api', router);
 	//require('./socketio')(server, io, mongoStore);
 
 	app.listen(port, function() {

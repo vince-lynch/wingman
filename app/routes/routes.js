@@ -17,6 +17,9 @@ function secureRoute(req, res, next) {
   });
 }
 
+
+router.post('/auth/facebook',authenticationController.facebook);
+
 router.route('/users')
   .get(secureRoute,usersController.index);
 
@@ -27,7 +30,7 @@ router.route('/users/:id')
   .delete(secureRoute, usersController.delete);
 
 
-router.post('/register', authenticationController.register);
-router.post('/login', authenticationController.login);
+router.post('/auth/register', authenticationController.register);
+router.post('/auth/login', authenticationController.login);
 
 module.exports = router;
