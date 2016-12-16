@@ -1,15 +1,44 @@
- <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD_uTMhCR43ITM0CCXrbWDGR8UC68_QDnI&libraries=places&callback=initMap" async defer></script>
+
 <section ng-init="isAuth()">
 
-<h1> This is the DASHBOARD </h1>
+<h1>DASHBOARD - <span ng-bind="inCity"></span></h1>
+
+{{locationupdated}}
+
+<input type="text" ng-model="trythis"/><button ng-click="addtoarray()">add to array</button>
 
 
-<h1>A super-simple geolocatio&#8203;n example</h1>
-<i class="fa fa-map-marker"></i>
-<button class="pure-button pure-button-primary" ng-click="getMyLocationbtn()">Get my location</button>
-<div class="result"></div>
-<span>see link in "details" for more information</span>
 
+<div  class="col-md-4 threecol">
+    
+    <div ng-show="nolocation">
+	    <h1> Get my location</h1>
+	    <i class="fa fa-map-marker"></i>
+	    <button class="pure-button pure-button-primary" ng-click="getMyLocationbtn()">Get my location</button>
+    </div>
 
+</div>
+
+<div class="col-md-4 threecol">
+	<div id="chatview">
+	  <ul>
+	      <li ng-repeat="message in messages track by $index" >
+
+		      <span ng-bind="message.username"></span>
+		      <span>: </span>
+		      <span ng-bind="message.message"></span>
+		      <span> @ </span>
+		      <span am-time-ago="message.timestamp"></span>
+	      </li>
+	  <ul>
+	</div>
+	<textarea ng-model="texttosend"></textarea>
+	<button ng-click="sendmessage(texttosend)">Send</button>
+
+</div>
+
+<div class="col-md-4 threecol">
+	<div class="result" id="map-result" style="width: 100%; height:500px;"></div>
+</div>
 
 </section>

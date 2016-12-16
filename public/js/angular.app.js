@@ -2,7 +2,7 @@ import ConsoleController from './controllers/ConsoleController';
 //import oAuthKeys from './services/oAuthKeys';
 //import ProductService from './services/ProductService';
 
-var app = angular.module('liveguardManager', ['ngResource', 'satellizer', 'angular-jwt', 'ui.router'])
+var app = angular.module('liveguardManager', ['ngResource', 'satellizer', 'angular-jwt', 'ui.router', 'angularMoment'])
   .constant('API', '/manager/api') 
   //.config(InterceptorConfig)
   .constant('FACEBOOK_API_KEY','1204326232924507')

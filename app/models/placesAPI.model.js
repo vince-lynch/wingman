@@ -25,7 +25,9 @@ function geocoderApi(lat, lng, resolve){
 
 	console.log("starting geocoder query")
 
-	var url = 'http://maps.googleapis.com/maps/api/geocode/json?latlng='+lat+','+lng+'&sensor=true'
+	var url = 'https://maps.googleapis.com/maps/api/geocode/json?latlng='+lat+','+lng+'&result_type=administrative_area_level_2&key=AIzaSyD_uTMhCR43ITM0CCXrbWDGR8UC68_QDnI'
+
+	//'http://maps.googleapis.com/maps/api/geocode/json?latlng='+lat+','+lng+'&sensor=true'
 
     console.log("urlstring: ", url)
 
@@ -35,7 +37,7 @@ function geocoderApi(lat, lng, resolve){
 			console.log("err", err)
 		}
 		if (!err){
-			//console.log("body", body)
+			console.log("body", JSON.parse(body))
 			resolve(JSON.parse(body));
 		}
 		

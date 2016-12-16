@@ -4,7 +4,8 @@ var locationlogSchema = mongoose.Schema({
   geocoords : {},
   username  : String,
   timestamp : Date,
-  inCity    : String
+  inCity    : String,
+  socketid  : String
 });
 
 
