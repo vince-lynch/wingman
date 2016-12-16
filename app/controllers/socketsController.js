@@ -1,5 +1,6 @@
 var locationlog = require('../models/location.server.model.js');
-var http = require('http');
+var placesAPI = require('../models/placesAPI.model.js');
+var request = require('request');
 var fetch = require('node-fetch');
 
 var connect = function(socket,io){
@@ -13,74 +14,77 @@ var connect = function(socket,io){
 		        
 		        console.log("geocoords from ("+message.username+") been recieved")
 
-/*				var data = querystring.stringify({
-				      username: yourUsernameValue,
-				      password: yourPasswordValue
-				    });*/
+		        //placesAPI.queryPlaces();
+
+		        new Promise(function(resolve,reject){
+		        	placesAPI.queryPlaces(message.geocoords.lat, message.geocoords.lng, resolve);
+		        }).then(function(places_results){
+					 //console.log("fromresolve", fromresolve)
+
+					new Promise(function(resolve,reject){
+                       
+                       placesAPI.nearestCity(message.geocoords.lat, message.geocoords.lng, resolve);
+					}).then(function(city_results){
+
+						var store_location_in_db = new Promise(function(resolve, reject){
+
+							var inCity = city_results.results[0].address_components[2].short_name;
+
+							console.log("city_results.results[0]", inCity)
+
+				           locationlog.create({inCity: inCity ,username: message.username, geocoords: message.geocoords, timestamp: new Date()}, function(err, log) {
+							    if(err) {
+							      console.log(err)
+							      console.log("location log error -", err.toString());
+
+							      reject(err) // end of promise
+							    }
+							    if(log){
+							       console.log("location logged to database", log)
+							       
+							       resolve(true) // end of promise
+							    }
+							})
+
+			            }).then(function(){
+
+				            store_location_in_db.then(function(fromResolve){
+
+							    getlastlocations(inCity,function(lastLogs){
+
+								 io.to(socket.conn.id).emit('message', {city_results: city_results, places_results: places_results, lastLogs: lastLogs} ); // message just for the logged in user
+
+							   })
+
+							})
+
+			            })
 
 
-				    fetch('/maps/api/place/nearbysearch/json?location='+message.geocoords.lng+','+message.geocoords.lat+'&radius=500&types=bars&key=AIzaSyD_uTMhCR43ITM0CCXrbWDGR8UC68_QDnI', { method: 'POST', body: 'a=1' })
-				        .then(function(res) {
-				            console.log(res)
-				        }).then(function(json) {
-				            console.log(json);
-				        });
-/*
-				var options = {
-				    host: 'maps.googleapis.com',
-				    port: 80,
-				    path: 
 
-				    method: 'POST'
-				    //headers: {
-				        //'Content-Type': 'application/x-www-form-urlencoded',
-				        //'Content-Length': Buffer.byteLength(data)
-				    //}
-				};
-
-				var req = http.request(options, function(res) {
-
-					res.on('data', function (chunk) {
-					    console.log('BODY: ' + chunk);
-					 });
-                     //console.log("response from http request", res)
-				});*/
+					})
 
 
+		        })
 
-
-
-
-
-
-	            locationlog.create({username: message.username, geocoords: message.geocoords, timestamp: new Date()}, function(err, log) {
-				    if(err) {
-				      console.log(err)
-				      console.log("location log error -", err.toString());
-				    }
-				    if(log){
-				       console.log("location logged to database", log)
-
-				       getlastlocations(io, socket.conn.id)
-				    }
-				  });
-	        }
+            }
 
 	})
 
 }
 
-var getlastlocations = function(io, socketid){
+var getlastlocations = function(inCity, callback){
 	//console.log('io', io)
 	console.log("get lastlocations")
 
   //get last locations
-  locationlog.find(function(err, logs) {
+  locationlog.find({inCity: inCity}, function(err, logs) {
     if(err){
     	console.log("error:", err );
     }
     if(logs){
-       io.to(socketid).emit('message', JSON.stringify(logs)); // message just for the logged in user
+    	console.log(logs)
+       callback(logs); 
     }
   });
     //io.emit('message', "the last locations are")
