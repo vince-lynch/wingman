@@ -37,19 +37,24 @@ function secureRoute(req, res, next) {
 
 router.post('/auth/facebook',authenticationController.facebook);
 
-router.post('/upload', function(req, res) {
+router.post('/upload',secureRoute, function(req, res) {
     upload(req,res,function(err){
         if(err){
              res.json({error_code:1,err_desc:err});
              return;
         }
+
+        // need access to the file name here so can add the uploaded profile picture to user profile
+         console.log("res.files", res.files) // cant find the .[dot].notation to access the filename property
+
+
+         // logic for adding it to the user record.
+
+
          res.json({error_code:0,err_desc:null});
     })
 });
 
-router.get('/upload', function(req, res){
-  res.send("this is a test")
-})
 
 
 router.route('/users')
