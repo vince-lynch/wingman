@@ -38,6 +38,7 @@
     "method-override": "~2.2.0",
     "mongoose": "4.1.1",
     "morgan": "^1.7.0",
+    "multer": "^1.2.1",
     "node-xwhois": "^1.0.4",
     "passport": "~0.2.1",
     "passport-bitbucket": "~1.0.0",

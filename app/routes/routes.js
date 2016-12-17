@@ -3,8 +3,23 @@ var jwt = require('jsonwebtoken');
 var usersController = require('../controllers/users.server.controller');
 var authenticationController = require('../controllers/authentication');
 var secret = require('../../config/tokens').secret;
-//var server = require('../../server').server;
-//var io     = require('socket.io')(server);
+var multer  = require('multer');
+
+
+var storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        console.log("got this far")
+        cb(null, './public/uploads/')
+    },
+    filename: function (req, file, cb) {
+        cb(null, file.originalname+ '-' + Date.now()+'.jpg')
+    }
+});
+ var upload = multer({storage: storage}).single('file');
+
+
+
+
 
 // custom JWT middleware
 function secureRoute(req, res, next) {
@@ -21,6 +36,21 @@ function secureRoute(req, res, next) {
 
 
 router.post('/auth/facebook',authenticationController.facebook);
+
+router.post('/upload', function(req, res) {
+    upload(req,res,function(err){
+        if(err){
+             res.json({error_code:1,err_desc:err});
+             return;
+        }
+         res.json({error_code:0,err_desc:null});
+    })
+});
+
+router.get('/upload', function(req, res){
+  res.send("this is a test")
+})
+
 
 router.route('/users')
   .get(secureRoute,usersController.index);

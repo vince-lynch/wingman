@@ -2,11 +2,26 @@ import ConsoleController from './controllers/ConsoleController';
 //import oAuthKeys from './services/oAuthKeys';
 //import ProductService from './services/ProductService';
 
-var app = angular.module('liveguardManager', ['ngResource', 'satellizer', 'angular-jwt', 'ui.router', 'angularMoment'])
+var app = angular.module('liveguardManager', ['ngResource', 'satellizer', 'angular-jwt', 'ui.router', 'angularMoment', 'ngFileUpload'])
   .constant('API', '/manager/api') 
   //.config(InterceptorConfig)
   .constant('FACEBOOK_API_KEY','1204326232924507')
   .controller('consoleController', ConsoleController)
+  .directive('fileModel', ['$parse', function ($parse) {
+    return {
+        restrict: 'A',
+        link: function(scope, element, attrs) {
+            var model = $parse(attrs.fileModel);
+            var modelSetter = model.assign;
+
+            element.bind('change', function(){
+                scope.$apply(function(){
+                    modelSetter(scope, element[0].files[0]);
+                });
+            });
+        }
+    };
+    }])
   .config(function ($stateProvider, $urlRouterProvider) {
         $stateProvider
              .state('home', {
@@ -16,6 +31,10 @@ var app = angular.module('liveguardManager', ['ngResource', 'satellizer', 'angul
              .state('login', {
                 url: '/login',
                 templateUrl: 'views/login.html'
+            })
+             .state('profile', {
+                url: '/profile',
+                templateUrl: 'views/profile.html'
             })
              .state('about', {
                 url: '/about',
