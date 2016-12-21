@@ -32,9 +32,12 @@
   <script src="build/app.min.js"></script>
   <link rel="stylesheet" href="build/styles.css">
 
+  <script> window.modules =['ngResource', 'satellizer', 'angular-jwt', 'ui.router', 'angularMoment', 'ngFileUpload'];
+
+  console.log("hello world", window.modules) </script>
 
 </head>
-<body ng-app="liveguardManager">
+<body ng-app="wingmanApp">
   <appbody ng-controller="consoleController">
   <header>
     <nav class="navbar navbar-default">
@@ -47,15 +50,17 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="/"><img src="/img/LiveGuardLogo.png" width="200"/></a>
+          <a class="profilepicture" ui-sref="profile" style="float: left;"  ng-show="isAuthenticated"><img ng-src="/app/uploads/{{login.profilepicture}}"  style="height: 68px;
+    width: 68px;"/> <span ng-bind="login.username"></span></a>
         </div>
 
         <ul class="nav navbar-nav navbar-right">
-          <li><a href="/" class="register-link" ng-hide="authenticated">Register</a></li>
-          <li><a href="/" class="login-link" ng-hide="authenticated">Login</a></li>
-          <li><a ui-sref="profile" class="users-link logged-in" ng-show="authenticated">Profile</a></li>
-          <li><a ui-sref="users" class="users-link logged-in" ng-show="authenticated">Users</a></li>
-          <li><a href="#" class="logout-link logged-in" ng-show="authenticated" ng-click="logout()">Logout</a></li>
+          <li><a href="/" class="register-link" ng-hide="isAuthenticated">Register</a></li>
+          <li><a href="/" class="login-link" ng-hide="isAuthenticated">Login</a></li>
+          <li><a ui-sref="dashboard" class="users-link logged-in" ng-show="isAuthenticated">Dashboard</a></li>
+          <li><a ui-sref="profile" class="users-link logged-in" ng-show="isAuthenticated">Profile</a></li>
+          <li><a ui-sref="users" class="users-link logged-in" ng-show="isAuthenticated">Users</a></li>
+          <li><a href="#" class="logout-link logged-in" ng-show="isAuthenticated" ng-click="logout()">Logout</a></li>
         </ul>
       </div><!-- /.container-fluid -->
     </nav>

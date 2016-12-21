@@ -12,7 +12,13 @@ var storage = multer.diskStorage({
         cb(null, './public/uploads/')
     },
     filename: function (req, file, cb) {
-        cb(null, file.originalname+ '-' + Date.now()+'.jpg')
+
+        var profilepicture = file.originalname+ '-' + Date.now()+'.jpg';
+        var username       = req.user._doc.username;
+        
+        usersController.addProfilePicture(profilepicture, username)
+
+        cb(null, profilepicture)
     }
 });
  var upload = multer({storage: storage}).single('file');
@@ -38,6 +44,9 @@ function secureRoute(req, res, next) {
 router.post('/auth/facebook',authenticationController.facebook);
 
 router.post('/upload',secureRoute, function(req, res) {
+
+    console.log("req.user._doc.username", req.user._doc.username)
+
     upload(req,res,function(err){
         if(err){
              res.json({error_code:1,err_desc:err});
@@ -58,7 +67,7 @@ router.post('/upload',secureRoute, function(req, res) {
 
 
 router.route('/users')
-  .get(secureRoute,usersController.index);
+  .post(secureRoute,usersController.index);
 
 router.route('/users/:id')
   .get(secureRoute,usersController.show)

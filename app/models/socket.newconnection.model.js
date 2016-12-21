@@ -1,5 +1,6 @@
 var locationlog = require('../models/location.server.model.js');
 var placesAPI = require('../models/placesAPI.model.js');
+var usersController = require('../controllers/users.server.controller');
 var request = require('request');
 var fetch = require('node-fetch');
 
@@ -13,9 +14,11 @@ function newconnection(socket, io, message){
 
 	console.log("geocoords from ("+message.username+") been recieved")
 
-	//placesAPI.queryPlaces();
 
 	var urLatLng = {lat: message.geocoords.lat, lng: message.geocoords.lng}
+
+    // add location to users account
+    usersController.updateLatLng(message.username, urLatLng)
 
 	new Promise(function(resolve,reject){
 	placesAPI.queryPlaces(message.geocoords.lat, message.geocoords.lng, resolve);
@@ -32,6 +35,9 @@ function newconnection(socket, io, message){
 			var inCity = city_results.results[0].formatted_address;
 
 			console.log("city_results.results[0]", inCity)
+
+			// add currentcity to users account
+		    usersController.updateLastCity(message.username, inCity)
 
 	       locationlog.create({socketid: socket.conn.id, inCity: inCity ,username: message.username, geocoords: message.geocoords, timestamp: new Date()}, function(err, log) {
 			    if(err) {

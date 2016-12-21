@@ -1,53 +1,54 @@
-<ol class="breadcrumb" style="margin-bottom: 5px;">
-  <li><a href="#">Home</a></li>
-  <li><a href="#">Library</a></li>
-  <li class="active">Data</li>
-</ol>
+<section id="login-page" ng-init="isAuth()">
+
+  <ol class="breadcrumb" style="margin-bottom: 5px;">
+    <li><a href="#">Home</a></li>
+    <li><a href="#">Library</a></li>
+    <li class="active">Data</li>
+  </ol>
 
 
-<div class="row">
-<div class="col-md-1">  </div>
+  <div class="row">
+  <div class="col-md-1">  </div>
 
-    
-    
-      <!-- <ng-include src="'./partials/selectedwebsiteinfo.html'"></ng-include> -->
-    
-    <div class="col-md-3">  </div>
-<div class="col-md-6">  
-      <form class="form-signin">
-        <h2 class="form-signin-heading">Please sign in</h2>
-        <label for="inputEmail" class="sr-only">Username</label>
-        <input type="text" id="inputEmail" class="form-control" placeholder="Username" ng-model="login.username">
-        <label for="inputEmail" class="sr-only">Email address</label>
-        <input type="email" id="inputEmail" class="form-control" placeholder="Email address" ng-model="login.email" required autofocus>
-        <label for="inputPassword" class="sr-only">Password</label>
-        <input type="password" id="inputPassword" class="form-control" placeholder="Password" ng-model="login.password" required>
-        <div class="checkbox">
-          <label>
-            <input type="checkbox" value="remember-me"> Remember me
-          </label>
+      
+      
+        <!-- <ng-include src="'./partials/selectedwebsiteinfo.html'"></ng-include> -->
+      
+      <div class="col-md-3">  </div>
+  <div class="col-md-6">  
+        <form class="form-signin">
+          <h2 class="form-signin-heading">Please sign in</h2>
+          <label for="inputEmail" class="sr-only">Username</label>
+          <input type="text" id="inputEmail" class="form-control" placeholder="Username" ng-model="login.username">
+          <label for="inputEmail" class="sr-only">Email address</label>
+          <input type="email" id="inputEmail" class="form-control" placeholder="Email address" ng-model="login.email" required autofocus>
+          <label for="inputPassword" class="sr-only">Password</label>
+          <input type="password" id="inputPassword" class="form-control" placeholder="Password" ng-model="login.password" required>
+          <div class="checkbox">
+            <label>
+              <input type="checkbox" value="remember-me"> Remember me
+            </label>
+          </div>
+          <div ng-bind="authMessage"></div>
+          <button class="btn btn-lg btn-primary btn-block" type="submit" ng-click="submitLogin()">Sign in</button>
+           <button class="btn btn-lg btn-primary btn-block" type="submit" ng-click="submitRegister()">Register</button>
+          <button ng-click="authenticate('facebook')">Sign in with Facebook</button>
+        </form>
+  </div>
+
+  <div class="col-md-3"> </div>
+
+
+    		
+
+        
+        
+        
+        </p>
+        <div class="modal-footer">
         </div>
-        <button class="btn btn-lg btn-primary btn-block" type="submit" ng-click="submitLogin()">Sign in</button>
-         <button class="btn btn-lg btn-primary btn-block" type="submit" ng-click="submitRegister()">Register</button>
-        <button ng-click="authenticate('facebook')">Sign in with Facebook</button>
-      </form>
-</div>
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+  </div><!-- /.modal -->
 
-<div class="col-md-3"> </div>
-
-
-  		
-
-      
-      
-      
-      </p>
-      <div class="modal-footer">
-      </div>
-    </div><!-- /.modal-content -->
-  </div><!-- /.modal-dialog -->
-</div><!-- /.modal -->
-
-
-
-    
+</section>

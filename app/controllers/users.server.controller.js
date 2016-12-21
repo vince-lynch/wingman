@@ -28,9 +28,50 @@ function usersDelete(req, res) {
   });
 }
 
+
+function addProfilePicture(profilepicture, username) {
+
+  console.log("addProfilePicture()", "profilepicture", profilepicture, "username", username)
+  User.findOneAndUpdate({username: username}, {$set:{ image: profilepicture}},function(err, user){
+      if(err){
+          console.log("Something wrong when updating data!");
+      }
+
+      console.log(user);
+  });
+}
+
+function updateLatLng(username, latLngObj) {
+
+  console.log("updateLatLng()", "latLngObj", latLngObj, "username", username)
+  User.findOneAndUpdate({username: username}, {$set:{ lastLatLng: latLngObj }},function(err, user){
+      if(err){
+          console.log("Something wrong when updating data!");
+      }
+
+      console.log(user);
+  });
+}
+
+function updateLastCity(username, lastCity) {
+  console.log("updateLastCity()", "lastCity", lastCity, "username", username)
+  User.findOneAndUpdate({username: username}, {$set:{lastCity: lastCity }},function(err, user){
+      if(err){
+          console.log("Something wrong when updating data!");
+      }
+
+      console.log(user);
+  });
+}
+
+
+
 module.exports = {
   index: usersIndex,
   show: usersShow,
   update: usersUpdate,
-  delete: usersDelete
+  delete: usersDelete,
+  addProfilePicture: addProfilePicture,
+  updateLatLng: updateLatLng,
+  updateLastCity: updateLastCity
 };

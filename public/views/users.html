@@ -1,0 +1,22 @@
+
+<section ng-init="usersPageInit()">
+	<h1>users.html</h1>
+
+	<ul id="userlist">
+
+		<li ng-repeat="user in userList">
+			<div class="user-avatar">
+				<img ng-src="/app/uploads/{{user.image}}"/>
+			</div>
+			<span ng-bind="user.username" class="username"></span><span class="theircity" ng-bind="user.lastCity"></span>
+		</li>
+
+	</ul>
+
+
+
+
+
+
+
+</section>

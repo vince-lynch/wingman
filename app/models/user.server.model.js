@@ -5,8 +5,11 @@ var userSchema = mongoose.Schema({
   username: { type: String, unique: true, required: true },
   fullname: String,
   image: String,
+  type: { type: String, default: "normal user" },
   email:    { type: String, unique: true, required: true },
-  passwordHash: { type: String, required: true }
+  passwordHash: { type: String, required: true },
+  lastLatLng: {},
+  lastCity: String,
 });
 
 userSchema.set('toJSON', {

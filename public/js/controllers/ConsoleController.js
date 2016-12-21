@@ -9,11 +9,28 @@
     $window.messages = [];
     $scope.inCity = "";
     $scope.texttosend = "";
+    $scope.userList = [];
    
 
     $scope.login = {email: "",password: "", username: ""}
 
     var socket = window.io();
+
+    $scope.usersPageInit = function(){
+
+     $http({
+       method: 'POST',
+       url: '/api/users',
+       data: { city: $scope.inCity }
+      }).then(function(response){
+         console.log(response)
+
+         $scope.userList = response.data;
+
+
+      });
+
+    }
 
 
     console.log("controller loaded");
@@ -26,8 +43,8 @@
     }
     $scope.upload = function (file) {
         Upload.upload({
-            url: 'http://localhost:3000/api/upload', //webAPI exposed to upload the file
-            data:{file:file} //pass file as data, should be user ng-model
+            url: '/api/upload', //webAPI exposed to upload the file
+            data:{file:file, login: $scope.login} //pass file as data, should be user ng-model
         }).then(function (resp) { //upload function returns a promise
             if(resp.data.error_code === 0){ //validate success
                 $window.alert('Success ' + resp.config.data.file.name + 'uploaded. Response: ');
@@ -49,9 +66,36 @@
 
 
 
-   $scope.isAuth = function(){
+ /*  $scope.isAuth = function(){
       $scope.authenticated ? '' : $state.go('login');
-   }
+   }*/
+
+   $window.state = $state;
+
+   $scope.isAuth = function() {
+    $scope.isAuthenticated = $auth.isAuthenticated()
+
+    if($scope.isAuthenticated){
+      $scope.payload = $auth.getPayload();
+
+      if($state.current.name == "login"){
+        $state.go('dashboard')
+      }
+
+      console.log("payload", $scope.payload)
+
+      $scope.login.profilepicture = $scope.payload._doc.image;
+      $scope.login.usertype       = $scope.payload._doc.type;
+      $scope.login.username       = $scope.payload._doc.username;
+      $scope.login.lastLatLng     = $scope.payload._doc.lastLatLng
+    } else {
+      $state.go('login') // go back to login page
+    }
+  };
+
+  $scope.logout = function(){
+    $auth.logout();
+  }
 
     // sign in with facebook
     $scope.authenticate = function(provider) {
@@ -66,17 +110,21 @@
     console.log("email: ", $scope.login.email, "password: ", $scope.login.password);
     $auth.login($scope.login).then(function(response){
       console.log(response);
-      $scope.authenticated = true;
+      $scope.login.profilepicture = response.data.user.image
+      console.log("$scope.login", $scope.login)
+ 
       $state.go('dashboard')
       $scope.sendSocket($scope.login.username);
-    })
+    }).catch(function(err){
+       $scope.authMessage = 'not authenticated, please either register, or recover your password?';
+     })
    }
 
   $scope.submitRegister = function(){
     console.log("email: ", $scope.login.email, "password: ", $scope.login.password);
     $auth.signup($scope.login).then(function(response){
        console.log(response);
-       $scope.authenticated = true;
+  
        $state.go('dashboard')
        $scope.sendSocket($scope.login.username);
     })

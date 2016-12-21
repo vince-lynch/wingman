@@ -16,7 +16,7 @@ var connect = function(socket,io){
 		console.log("message",message)
 		var inCity = message.inCity;
 		var timestamp = message.timestamp.toString()
-		
+
 		io.to(inCity).emit('message',{message: message.text, username: message.username, timestamp: timestamp})
 	})
 
