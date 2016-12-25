@@ -141,9 +141,11 @@
 
   function getLocation(){
   var msg; 
-
+  
  
   if('geolocation' in window.navigator){
+
+    console.log("browser supports geolocation, going to call requestLocation() function")
 
     requestLocation();
   }else{
@@ -176,12 +178,12 @@
       // get longitude and latitude from the position object passed in
 
 
-      var geocoords = {lat:  "51.4937728", lng: "-0.1422" }//{lng: pos.coords.longitude, lat: pos.coords.latitude}
+      var geocoords = {lng: pos.coords.longitude, lat: pos.coords.latitude} //{lat:  "51.4937728", lng: "-0.1422" }//
 
       // needs to calculate nearest city using GOOGLE. (in order to create rooms/ something like that with sockets)
       //$http.post('', geocoords, config).then(successCallback, errorCallback);
 
-
+       console.log("geocoords are: ", geocoords)
       // send back their location to the server (via sockets)
       $scope.sendSocket($scope.login.username, geocoords)
       // and presto, we have the device's location!

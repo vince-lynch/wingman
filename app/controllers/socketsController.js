@@ -9,6 +9,8 @@ var connect = function(socket,io){
 	console.log("connect - new connection", socket.conn.id)
 
 	socket.on('newconnection', function(message){
+		console.log("user socket message: ", message);
+		
 		newconnection.newconnection(socket, io, message)
 	})
 

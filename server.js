@@ -1,70 +1,68 @@
-//express 				= require('./config/express');
-app						= require('./config/express');
-var	express 		= require('express'),
-	app           	= express(),
-	server          = require('http').createServer(app),
-	morgan 			= require('morgan'),
-	mongoose      = require('mongoose'),
-	cors          = require('cors'),
-	port          = process.env.PORT || 3000;
-	bodyParser		= require('body-parser'),
-	methodOverride	= require('method-override'),
-	jwt           = require('jsonwebtoken'),
-	router        = require('./app/routes/routes'),
-	socketsController = require('./app/controllers/socketsController'),
-	secret        = require('./config/tokens').secret,
-	io            = require('socket.io')(server);
+var app     = require('./config/express');
+var express = require('express');  
+var http = require('https');  
+var fs = require('fs');
+var morgan  = require('morgan');
+var mongoose = require('mongoose');
+var cors     = require('cors');
+var bodyParser    = require('body-parser');
+var methodOverride  = require('method-override');
+var jwt             = require('jsonwebtoken');
+var router          = require('./app/routes/routes');
+var socketsController = require('./app/controllers/socketsController');
+var secret        = require('./config/tokens').secret;
 
-	if (process.env.NODE_ENV === 'development') {
-		app.use(morgan('dev'));
-	} else if (process.env.NODE_ENV === 'production') {
-		app.use(compress());
-	}
+//https://startupnextdoor.com/how-to-obtain-and-renew-ssl-certs-with-lets-encrypt-on-node-js/
 
-	app.use(bodyParser.urlencoded({
-		extended: true
-	}));
+//this.app = this.express();
 
-	app.use(bodyParser.json());
-	app.use(methodOverride());
+
+app.use(bodyParser.urlencoded({
+  extended: true
+}));
+
+app.use(bodyParser.json());
+app.use(methodOverride());
+app.use(morgan('dev'));
 
 
 
-	//app.use(cors());
-	app.use(function(req, res, next) {
-	  res.header("Access-Control-Allow-Origin", "*");
-	  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-	  next();
-	});
 
-	app.use(morgan('dev'));
-	app.use(bodyParser.urlencoded({ extended: true }));
-	app.use(bodyParser.json());
+var sslPath = './ssl/';
 
-	//app.get('*',function(req,res){
- 	// res.sendfile('index.html');
-//	});
+var options = {  
+    key: fs.readFileSync(sslPath + 'privkey.pem'),
+    cert: fs.readFileSync(sslPath + 'fullchain.pem')
+};
 
-    /*io.on('connection', function(socket){
-    	console.log("connection - new connection", socket.conn.id)
-    })*/
+var server  = http.createServer(options, app);  
+var io      = require('socket.io')(server);
 
-    io.on('connect', function(socket){
-    	socketsController.connect(socket,io)
-    	io.emit("I emitted this from server.js")
-    })
 
-	app.use('/app', express.static('./public'));
+io.on('connect', function(socket){
+    socketsController.connect(socket,io)
+    io.emit("I emitted this from server.js")
+  })
 
-	//app.use(express.static('./public'));
+app.use('/app', express.static('./public'));
 
-	app.use('/api', router);
-	//require('./socketio')(server, io, mongoStore);
 
-	server.listen(port, function() {
-	  console.log("Express is listening on port " + port);
-	});
+app.use('/api', router);
+
+
+server.listen(443);  
+
 
 module.exports = {
   server: server
 };
+
+
+
+//io = require('socket.io').listen(server);  
+
+
+
+  //server          = require('https').createServer(app),
+ 
+  //port          = process.env.PORT || 1337;
