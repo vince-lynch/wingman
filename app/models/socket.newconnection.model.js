@@ -59,22 +59,16 @@ function newconnection(socket, io, message){
 
 	        	console.log("got as far as here")
 
-			    locationlog.find({inCity: inCity}, function(err, logs) {
-				    if(err){
-				    	console.log("error:", err );
-				    }
-				    if(logs){
-				    	//console.log(logs)
-	                    
-	                    //have them join the chat for that city
-						socket.join(inCity);
+			     usersController.usersFindByCity(inCity, function(users){
 
-						io.to(inCity).emit('message',{username: "[ROOM]",message: message.username + " from " + inCity + " - has just logged in", timestamp: Date.now()})
-				        io.to(socket.conn.id).emit('data', {event: 'locationupdated', city_results: city_results, places_results: places_results, lastLogs: logs, urLatLng: urLatLng, inCity: inCity } ); // message just for the logged in user
+                    //have them join the chat for that city
+					socket.join(inCity);
 
-				    }
-				
-			   })
+					io.to(inCity).emit('message',{username: "[ROOM]",message: message.username + " from " + inCity + " - has just logged in", timestamp: Date.now()})
+			        io.to(socket.conn.id).emit('data', {event: 'locationupdated', city_results: city_results, places_results: places_results, lastLogs: users, urLatLng: urLatLng, inCity: inCity } ); // message just for the logged in user
+
+			     })
+
 
 			}).catch(function(error) {
 			  console.error(error.stack);

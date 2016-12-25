@@ -44,7 +44,7 @@ function addProfilePicture(profilepicture, username) {
 function updateLatLng(username, latLngObj) {
 
   console.log("updateLatLng()", "latLngObj", latLngObj, "username", username)
-  User.findOneAndUpdate({username: username}, {$set:{ lastLatLng: latLngObj }},function(err, user){
+  User.findOneAndUpdate({username: username}, {$set:{ lastLatLng: latLngObj, lastUpdate: Date.now() }},function(err, user){
       if(err){
           console.log("Something wrong when updating data!");
       }
@@ -55,12 +55,19 @@ function updateLatLng(username, latLngObj) {
 
 function updateLastCity(username, lastCity) {
   console.log("updateLastCity()", "lastCity", lastCity, "username", username)
-  User.findOneAndUpdate({username: username}, {$set:{lastCity: lastCity }},function(err, user){
+  User.findOneAndUpdate({username: username}, {$set:{lastCity: lastCity, lastUpdate: Date.now() }},function(err, user){
       if(err){
           console.log("Something wrong when updating data!");
       }
 
       console.log(user);
+  });
+}
+
+function usersFindByCity(lastCity, callback) {
+  User.find({lastCity: lastCity}).exec(function(err, users) {
+    if(err) return console.log("error:", err );
+    callback(users);
   });
 }
 
@@ -73,5 +80,6 @@ module.exports = {
   delete: usersDelete,
   addProfilePicture: addProfilePicture,
   updateLatLng: updateLatLng,
-  updateLastCity: updateLastCity
+  updateLastCity: updateLastCity,
+  usersFindByCity: usersFindByCity
 };

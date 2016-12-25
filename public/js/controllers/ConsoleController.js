@@ -210,14 +210,16 @@
 
     console.log("lat/lng", lng, lat)
 
-    var marker_these_users = [];
+    var marker_these_users = data.lastLogs;
+
+    //marker_these_users.push({username: $scope.login.username, timestamp: Date.now(), geocoords: {lat: lat, lng: lng}})
     
     var i = 0;
-    for (i in data.lastLogs){
+/*    for (i in data.lastLogs){
       if (data.lastLogs[i].username !=  $scope.login.username){
          marker_these_users.push(data.lastLogs[i])
       }
-    }
+    }*/
     console.log("going to add these users to the map", marker_these_users)
     $window.marker_these_users = marker_these_users;
 
@@ -225,7 +227,7 @@
      // map options
     var options = {
         zoom: 13,
-        center: new google.maps.LatLng(lat, lng), // centered US
+        center: new google.maps.LatLng(lat, lng), // centered on logged in user location
         mapTypeId: google.maps.MapTypeId.TERRAIN,
         mapTypeControl: false
     };
@@ -233,32 +235,40 @@
     // init map
     var map = new google.maps.Map(document.getElementById('map-result'), options);
 
-    // NY and CA sample Lat / Lng
-    var southWest = new google.maps.LatLng(40.744656, -74.005966);
-    var northEast = new google.maps.LatLng(34.052234, -118.243685);
-    var lngSpan = northEast.lng() - southWest.lng();
-    var latSpan = northEast.lat() - southWest.lat();
 
     // set multiple marker
     var i = 0;
     for (i in marker_these_users) {
+
+      console.log("printing i: ", i, "username: ", marker_these_users[i].username, "to the map")
         // init markers
         var marker = new google.maps.Marker({
-            position: new google.maps.LatLng(marker_these_users[i].geocoords.lat, marker_these_users[i].geocoords.lng),
+            position: new google.maps.LatLng(marker_these_users[i].lastLatLng.lat, marker_these_users[i].lastLatLng.lng),
             map: map,
-            title: 'Click Me '
+            clickable: true
         });
 
-        // process multiple info windows
-        (function(marker, i) {
-            // add click event
-            google.maps.event.addListener(marker, 'click', function() {
-                $window.infowindow = new google.maps.InfoWindow({
-                    content: 'Hello, World!!'
-                });
-                infowindow.open(map, marker);
-            });
-        })(marker, i);
+        //var marker = new google.maps.Marker({map: map, position: point, clickable: true});
+
+        marker.info = new google.maps.InfoWindow({
+          content: '<b>username:</b> ' + marker_these_users[i].username + ' last online: ' + marker_these_users[i].lastUpdate
+        });
+
+        google.maps.event.addListener(marker, 'click', function() {
+          var marker_map = this.getMap();
+          this.info.open(marker_map);
+        });
+
+        // // process multiple info windows
+        // (function(marker, i) {
+        //     // add click event
+        //     google.maps.event.addListener(marker, 'click', function() {
+        //         $window.infowindow = new google.maps.InfoWindow({
+        //             content: 'Hello, World!!'
+        //         });
+        //         infowindow.open(map, marker);
+        //     });
+        // })(marker, i);
     }
 
   }
