@@ -10,6 +10,9 @@
     $scope.inCity = "";
     $scope.texttosend = "";
     $scope.userList = [];
+    $scope.nightclubs = [];
+    $scope.bars = [];
+    
    
 
     $scope.login = {email: "",password: "", username: ""}
@@ -324,6 +327,8 @@ $scope.getMyLocationbtn = function(){
 
       $scope.$apply(function () {
             $scope.nolocation = !$scope.nolocation
+            $scope.nightclubs = data.places_results.nightclubs.results
+            $scope.bars = data.places_results.bars.results
             $scope.plotusers(data.urLatLng.lat,data.urLatLng.lng, data)
       });
       console.log("location has been updated")

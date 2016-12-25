@@ -2,6 +2,20 @@
     
   <h1> put something here</h1>
 
+  <h2> Nightclubs </h2>
+  <ul>
+      <li ng-repeat="club in nightclubs track by $index">
+           {{club.name}}
+      </li>
+  </ul>
+
+  <h2>Bars</h2>
+   <ul>
+      <li ng-repeat="bar in bars track by $index">
+           {{bar.name}}
+      </li>
+  </ul>
+
 </div>
 
 <div class="col-md-4 threecol">

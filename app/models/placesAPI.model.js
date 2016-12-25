@@ -61,7 +61,7 @@ function queryPlaces(lat, lng, finalresolve){
     }).then(function(){
 
 	    new Promise(function(resolve, reject){
-	    	queryplacesApi(api_key,"bar", lat, lng, resolve)
+	    	queryplacesApi(api_key,"night_club", lat, lng, resolve)
 	    }).then(function(fromResolve_nightclubs){
 	        places_results.nightclubs =  fromResolve_nightclubs;
 	    }).then(function(){
