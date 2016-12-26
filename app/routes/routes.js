@@ -2,6 +2,7 @@ var router = require('express').Router();
 var jwt = require('jsonwebtoken');
 var usersController = require('../controllers/users.server.controller');
 var authenticationController = require('../controllers/authentication');
+var messagesController = require('../controllers/messagesController.js');
 var secret = require('../../config/tokens').secret;
 var multer  = require('multer');
 
@@ -64,6 +65,8 @@ router.post('/upload',secureRoute, function(req, res) {
     })
 });
 
+router.route('/messages/history')
+   .post(secureRoute, messagesController.messageHistoryforCity)
 
 
 router.route('/users')

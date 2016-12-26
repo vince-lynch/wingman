@@ -12,10 +12,35 @@
     $scope.userList = [];
     $scope.nightclubs = [];
     $scope.bars = [];
+    $scope.geocoords = {};
     
    
-
     $scope.login = {email: "",password: "", username: ""}
+
+   $scope.$watch('inCity', function() {
+     $scope.getMessageHistory()
+   });
+   
+   $scope.$watch('nightclubs', function() {
+    var i = 0;
+    for (i in $scope.nightclubs){
+        var theirLocation = new google.maps.LatLng($scope.geocoords.lat, $scope.geocoords.lng);
+        var venueLocation = new google.maps.LatLng($scope.nightclubs[i].geometry.location.lat, $scope.nightclubs[i].geometry.location.lng);
+        $scope.nightclubs[i].distance = (google.maps.geometry.spherical.computeDistanceBetween(theirLocation, venueLocation) / 1000).toFixed(2);
+        $scope.nightclubs[i].checkedIn =  $scope.nightclubs[i].checkedIn == undefined ? false :  $scope.nightclubs[i].checkedIn;
+       }
+    });
+
+    $scope.$watch('bars', function() {
+      var i = 0;
+      for (i in $scope.bars){
+        //console.log("reached bars.$watch:", $scope.bars[i])
+        var theirLocation = new google.maps.LatLng($scope.geocoords.lat, $scope.geocoords.lng);
+        var venueLocation = new google.maps.LatLng($scope.bars[i].geometry.location.lat, $scope.bars[i].geometry.location.lng);
+        $scope.bars[i].distance = (google.maps.geometry.spherical.computeDistanceBetween(theirLocation, venueLocation) / 1000).toFixed(2);
+        $scope.bars[i].checkedIn =  $scope.bars[i].checkedIn == undefined ? false :  $scope.bars[i].checkedIn;
+       }
+    });
 
     var socket = window.io();
 
@@ -27,13 +52,25 @@
        data: { city: $scope.inCity }
       }).then(function(response){
          console.log(response)
-
          $scope.userList = response.data;
-
-
       });
 
     }
+
+   $scope.getMessageHistory = function(){
+    console.log("getMessageHistory() called")
+     $http({
+       method: 'POST',
+       url: '/api/messages/history',
+       data: { city: $scope.inCity }
+      }).then(function(response){
+         console.log(response)
+         $scope.messageHistory = response.data;
+      });
+  }
+
+
+    
 
 
     console.log("controller loaded");
@@ -182,6 +219,7 @@
 
 
       var geocoords = {lng: pos.coords.longitude, lat: pos.coords.latitude} //{lat:  "51.4937728", lng: "-0.1422" }//
+      $scope.geocoords = geocoords;
 
       // needs to calculate nearest city using GOOGLE. (in order to create rooms/ something like that with sockets)
       //$http.post('', geocoords, config).then(successCallback, errorCallback);
@@ -305,6 +343,28 @@ $scope.getMyLocationbtn = function(){
   }
 
 
+  $scope.checkIn = function(venueObj, InOut){
+
+     var message = InOut == "in" ? "has just checked in to " + venueObj.name +" ... " : "has just left" + venueObj.name +" ... "
+     $scope.sendmessage(message)
+
+     var i = 0;
+     for (i in $scope.bars){
+      if($scope.bars[i].id == venueObj.id){
+        $scope.bars[i].checkedIn = InOut == "in" ? true : false;
+      }
+     }
+
+     var i = 0;
+     for (i in $scope.nightclubs){
+      if($scope.nightclubs[i].id == venueObj.id){
+        $scope.nightclubs[i].checkedIn = InOut == "in" ? true : false;
+      }
+     }
+     //venueObj.checkedIn = {status: true, timestamp: Date.now()}
+     console.log($scope.nightclubs)
+     console.log($scope.bars)
+  }
 
   // sockets returns the last seen location of other users
   
