@@ -1,8 +1,8 @@
 var MessageHistory = require('../models/messageHistory.model.js');
 
-function insertMessage(username, timestamp,  message, city) {
+function insertMessage(username, timestamp,  message, city, avatar) {
  var message = new MessageHistory({username: username, timestamp: timestamp, 
-                          message: message, city: city});
+                          message: message, city: city, avatar: avatar});
   message.save(function (err) {
     if (err) {
       return err;

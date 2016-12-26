@@ -65,8 +65,11 @@ function newconnection(socket, io, message){
 					socket.join(inCity);
 
 					io.to(inCity).emit('message',{username: "[ROOM]",message: message.username + " from " + inCity + " - has just logged in", timestamp: Date.now()})
-			        io.to(socket.conn.id).emit('data', {event: 'locationupdated', city_results: city_results, places_results: places_results, lastLogs: users, urLatLng: urLatLng, inCity: inCity } ); // message just for the logged in user
-
+			        
+                    usersController.getUserObj(message.username, function(userObj){
+                    	io.to(socket.conn.id).emit('data', {event: 'locationupdated', city_results: city_results, places_results: places_results, lastLogs: users, urLatLng: urLatLng, inCity: inCity, userObj: userObj } ); // message just for the logged in user
+                    })
+			        
 			     })
 
 

@@ -64,11 +64,35 @@ div.col-md-4.threecol{
     color: #8e1313;
 }
 
+#chatview em {
+    font-size: 9px;
+}
+
+#chatview img.avatar {
+    border-radius: 100px;
+}
+
+#chatview li {
+    list-style-type: none;
+    margin-left: -20px;
+    display: block;
+}
+
 ul#userlist li{
 	padding-bottom: 20px;
 }
 
+ul#bars-list{ 
+  height: 182px;
+  overflow-y: scroll;
+  overflow-x: hidden;
+}  
 
+ul#clubs-list{ 
+  height: 182px;
+  overflow-y: scroll;
+  overflow-x: hidden;
+}  
 
    
 

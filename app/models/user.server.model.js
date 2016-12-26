@@ -10,7 +10,8 @@ var userSchema = mongoose.Schema({
   passwordHash: { type: String, required: true },
   lastLatLng: {},
   lastCity: String,
-  lastUpdate: Date
+  lastUpdate: Date,
+  venueCheckedIN: {}
 });
 
 userSchema.set('toJSON', {

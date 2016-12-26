@@ -1,0 +1,35 @@
+<!-- <i class="fa fa-times" aria-hidden="true" ng-click="showCheckin = false"></i> -->
+
+  <div ng-if="login.checkedIn.hasOwnProperty('name')"> 
+	  <span>You are already checked into {{login.checkedIn.name}} please checkout first</span>
+	  </br>
+	  <button class="btn btn-danger" ng-click="checkIn(login.checkedIn, 'out')">Check out</button>
+
+  </div>
+
+  <div ng-hide="login.checkedIn">
+
+	  <h2> Nightclubs </h2>
+	  <ul id="clubs-list">
+	      <li ng-repeat="club in nightclubs track by $index">
+	           <span>{{club.name}}</span></br>
+
+	           <img src="https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference={{club.photos[0].photo_reference}}&key=AIzaSyCTggY4m6TqgGtXh0I5pJTuNX1imAPe8QY" width="100px" height="100px">
+	           </br>
+	           <span>Distance {{club.distance}} km <em>from your current location</em></span></br>
+	           <button class="btn btn-primary" ng-click="checkIn(club, 'in')"  ng-hide="club.checkedIn"> Check in </button><button class="btn btn-danger" ng-show="club.checkedIn" ng-click="checkIn(club, 'out')">Check out</button>
+	      </li>
+	  </ul>
+
+	  <h2>Bars</h2>
+	   <ul id="bars-list">>
+	      <li ng-repeat="bar in bars track by $index">
+	           <span>{{bar.name}}</span></br>
+	           <img src="https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference={{bar.photos[0].photo_reference}}&key=AIzaSyCTggY4m6TqgGtXh0I5pJTuNX1imAPe8QY" width="100px" height="100px"> <!-- CnRtAAAATLZNl354RwP_9UKbQ_5Psy40texXePv4oAlgP4qNEkdIrkyse7rPXYGd9D_Uj1rVsQdWT4oRz4QrYAJNpFX7rzqqMlZw2h2E2y5IKMUZ7ouD_SlcHxYq1yL4KbKUv3qtWgTK0A6QbGh87GB3sscrHRIQiG2RrmU_jF4tENr9wGS_YxoUSSDrYjWmrNfeEHSGSc3FyhNLlBU -->
+	           </br>
+	           <span>Distance {{bar.distance}} km <em>from your current location</em></span>
+	           <button class="btn btn-primary" ng-click="checkIn(bar, 'in')" ng-hide="bar.checkedIn"> Check in </button><button class="btn btn-danger" ng-show="bar.checkedIn" ng-click="checkIn(bar, 'out')">Check out</button>
+	      </li>
+	  </ul>
+
+  </div>

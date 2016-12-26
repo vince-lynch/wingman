@@ -13,6 +13,7 @@
     $scope.nightclubs = [];
     $scope.bars = [];
     $scope.geocoords = {};
+    $scope.showCheckin = false;
     
    
     $scope.login = {email: "",password: "", username: ""}
@@ -337,16 +338,22 @@ $scope.getMyLocationbtn = function(){
   }
   
   $scope.sendmessage = function(texttosend){
-    var themessage = {text: texttosend, inCity: $scope.inCity, username: $scope.login.username, timestamp: Date.now()};
+    var themessage = {text: texttosend, inCity: $scope.inCity, username: $scope.login.username, timestamp: Date.now(), avatar: $scope.login.profilepicture};
     console.log("themessage", themessage)
-    socket.emit('chatmessage', themessage )
+    
   }
 
 
   $scope.checkIn = function(venueObj, InOut){
 
      var message = InOut == "in" ? "has just checked in to " + venueObj.name +" ... " : "has just left" + venueObj.name +" ... "
-     $scope.sendmessage(message)
+     
+     venueObj = InOut == 'in' ? venueObj : {}; // empty venueObj object if checking out.
+
+     //update frontend user object with venue information
+     $scope.login.checkedIn = InOut == 'in' ? venueObj : {};
+
+     socket.emit('checkin', {text: message, inCity: $scope.inCity, username: $scope.login.username, avatar: $scope.login.profilepicture, venue: venueObj} )
 
      var i = 0;
      for (i in $scope.bars){
@@ -364,6 +371,9 @@ $scope.getMyLocationbtn = function(){
      //venueObj.checkedIn = {status: true, timestamp: Date.now()}
      console.log($scope.nightclubs)
      console.log($scope.bars)
+     $scope.$apply(function () {
+        $scope.showCheckin = false;
+     });
   }
 
   // sockets returns the last seen location of other users
@@ -390,6 +400,7 @@ $scope.getMyLocationbtn = function(){
             $scope.nightclubs = data.places_results.nightclubs.results
             $scope.bars = data.places_results.bars.results
             $scope.plotusers(data.urLatLng.lat,data.urLatLng.lng, data)
+            $scope.login.checkedIn = data.userObj[0].venueCheckedIN;
       });
       console.log("location has been updated")
     }

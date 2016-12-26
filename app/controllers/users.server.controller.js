@@ -28,6 +28,13 @@ function usersDelete(req, res) {
   });
 }
 
+function getUserObj(username,callback) {
+  User.find({username: username}).exec(function(err, userObj) {
+    if(err) return console.log("error:", err );
+    callback(userObj);
+  });
+}
+
 
 function addProfilePicture(profilepicture, username) {
 
@@ -57,12 +64,24 @@ function updateLastCity(username, lastCity) {
   console.log("updateLastCity()", "lastCity", lastCity, "username", username)
   User.findOneAndUpdate({username: username}, {$set:{lastCity: lastCity, lastUpdate: Date.now() }},function(err, user){
       if(err){
-          console.log("Something wrong when updating data!");
+          console.log("Something wrong when updating updateLastCity() data!");
       }
 
       console.log(user);
   });
 }
+
+function updateCheckin(username, venueObj){
+  console.log("reached updateCheckin function - with ", venueObj)
+  User.findOneAndUpdate({username: username}, {$set:{venueCheckedIN: venueObj}},function(err, user){
+    if(err){
+        console.log("Something wrong when updating updateCheckin() data!");
+    }
+    console.log(user);
+  });
+}
+
+
 
 function usersFindByCity(lastCity, callback) {
   User.find({lastCity: lastCity}).exec(function(err, users) {
@@ -81,5 +100,7 @@ module.exports = {
   addProfilePicture: addProfilePicture,
   updateLatLng: updateLatLng,
   updateLastCity: updateLastCity,
-  usersFindByCity: usersFindByCity
+  usersFindByCity: usersFindByCity,
+  updateCheckin: updateCheckin,
+  getUserObj: getUserObj
 };

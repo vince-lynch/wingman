@@ -4,7 +4,8 @@ var messageHistorySchema = mongoose.Schema({
   username  : String,
   timestamp : Date,
   message   : String,
-  city      : String
+  city      : String,
+  avatar    : String
 });
 
 
